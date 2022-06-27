@@ -2,7 +2,7 @@
 start 
 initialize global variables
 */
-const connectDB = require("./db/connect");
+
 const express = require("express");
 
 const morgan = require("morgan");
@@ -11,16 +11,21 @@ require('dotenv').config();
 
 const app = express();
 
+const connectDB = require("./db/connect");
+
 const tasksRouter = require("./routes/tasks");
 
-const port = 3000;
+const notFoundMiddleware=require('./middleware/not-found');
+const notFound = require("./middleware/not-found");
+
+const port = process.env.PORT || 3000;
 
 /*
 end intialize global variables
 */
 
 /*
-routes ---> t
+routes ---> 
 app.get('/api/v1/tasks')  get all the tasks 
 app.post('/api/v1/tasks') add one tasks
 app.get('/api/v1/tasks/:id') get info about a single task
@@ -46,12 +51,17 @@ app.use(
 /*
 end setting up middleware 
 */
+/*
+start setting up routes
+*/
 
-app.get("/hello", (req, res) => {
-  res.send("<h1>welcome to our task manager app</h1>");
-});
 
 app.use("/api/v1/tasks", tasksRouter);
+app.use(notFound);
+
+/*
+end setting up routes
+*/
 
 const start = async () => {
   try {
