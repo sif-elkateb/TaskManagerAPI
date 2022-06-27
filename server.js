@@ -2,9 +2,12 @@
 start 
 initialize global variables
 */
+const connectDB = require("./db/connect");
 const express = require("express");
 
 const morgan = require("morgan");
+
+require('dotenv').config();
 
 const app = express();
 
@@ -31,7 +34,7 @@ start setting up middleware
 
 app.use(morgan("tiny"));
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 app.use(express.json());
 
@@ -50,6 +53,15 @@ app.get("/hello", (req, res) => {
 
 app.use("/api/v1/tasks", tasksRouter);
 
-app.listen(port, () => {
-  console.log(`started listening at port ${port}`);
-});
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URl);
+    app.listen(port, () => {
+      console.log(`started listening at port ${port}`);
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+start();
