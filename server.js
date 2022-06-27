@@ -16,8 +16,8 @@ const connectDB = require("./db/connect");
 const tasksRouter = require("./routes/tasks");
 
 const notFoundMiddleware=require('./middleware/not-found');
-const notFound = require("./middleware/not-found");
 
+const errorHandlerMiddleware=require('./middleware/errorhandler');
 const port = process.env.PORT || 3000;
 
 /*
@@ -57,7 +57,8 @@ start setting up routes
 
 
 app.use("/api/v1/tasks", tasksRouter);
-app.use(notFound);
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 /*
 end setting up routes
